@@ -1,2 +1,3 @@
-# module
+# yrevilla/modules
+
 Make your php project modular
