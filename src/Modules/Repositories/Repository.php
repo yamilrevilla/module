@@ -57,8 +57,13 @@ abstract class Repository implements RepositoryInterface
 
     public function getPath()
     {
-        // TODO: change hardcode path in getPath()
-        return $this->path ?: 'C:\xampp\htdocs\nueva_extranet\extranet\Modules';
+        $path = realpath(__DIR__ . '/../../../../../../');
+        if(defined('_PATH'))
+        {
+            $path = _PATH;
+        }
+        $path .= DIRECTORY_SEPARATOR. getenv('MODULE_MAIN_FOLDER');
+        return $this->path ?: $path;
     }
 
     public function setPath($path)
@@ -69,7 +74,6 @@ abstract class Repository implements RepositoryInterface
 
     public function getNamespace()
     {
-        // TODO: change hardcode namespace in getNameSpace
         return rtrim('Extranet\Modules\\', '/\\');
     }
 

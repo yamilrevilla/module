@@ -84,15 +84,16 @@ class LocalRepository extends Repository
         $cachePath = $this->getCachePath();
         $cache     = $this->getCache();
         $module    = $this->where('slug', $slug);
-        $moduleKey = $module->keys()->first();
-        $values    = $module->first();
-        if (isset($values[$key])) {
-            unset($values[$key]);
+        if (isset($module[$key])) {
+            unset($module[$key]);
         }
-        $values[$key] = $value;
-        $module = collect([$moduleKey => $values]);
+        $module[$key] = $value;
+
+        $module = collect([$module['name'] => $module]);
         $merged  = $cache->merge($module);
         $content = json_encode($merged->all(), JSON_PRETTY_PRINT);
+        //var_dump($cache);
+        //var_dump($module);
         return $this->files->put($cachePath, $content);
     }
 
@@ -142,8 +143,13 @@ class LocalRepository extends Repository
 
     protected function getCachePath()
     {
-        // TODO: change hardcode path in getCachePath()
-        return 'C:\xampp\htdocs\nueva_extranet\extranet\cache';
+        $path = realpath(__DIR__ . '/../../../../../../');
+        if(defined('_PATH'))
+        {
+            $path = _PATH;
+        }
+        $path .= DIRECTORY_SEPARATOR. getenv('MODULE_CACHE_FOLDER');
+        return $path;
     }
 
 
